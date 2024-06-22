@@ -23,4 +23,12 @@ jobs:
     - run: |
         docker build . -t newacr21.azurecr.io/hello-world:${{ github.sha }}
         docker push newacr21.azurecr.io/hello-world:${{ github.sha }}
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: xyzone
+        images: newacr21.azurecr.io/hello-world:${{ github.sha }}
+        slot-name: production
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
    
