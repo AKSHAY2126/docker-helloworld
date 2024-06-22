@@ -1,0 +1,26 @@
+name: Push Image to ACR
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: azure/docker-login@v2
+      with:
+        login-server: newacr21.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    - run: |
+        docker build . -t newacr21.azurecr.io/hello-world:${{ github.sha }}
+        docker push newacr21.azurecr.io/hello-world:${{ github.sha }}
+   
